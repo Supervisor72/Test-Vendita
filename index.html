@@ -7,40 +7,43 @@
   <style>
     body {
       font-family: Helvetica, sans-serif;
+      font-size: 8px; /* Font ridotto per comprimere */
       max-width: 800px;
-      margin: auto;
-      padding: 30px;
+      margin: 0;
+      padding: 10px;
       background-color: #f9f9f9;
     }
     h1, h2 {
+      font-size: 14px; /* Font ridotto */
       text-align: center;
-      margin-top: 40px;
+      margin: 10px 0;
     }
     label {
       font-weight: bold;
-      margin-top: 15px;
+      font-size: 9px; /* Font ridotto */
       display: block;
+      margin: 3px 0;
     }
     input[type="text"], input[type="date"], textarea, select, input[type="number"] {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      margin-bottom: 15px;
+      padding: 4px;
+      margin: 3px 0;
       box-sizing: border-box;
-      font-size: 0.9rem; /* Ridotto per contenere tutto */
+      font-size: 8px; /* Font ridotto */
     }
     .section {
       border: 1px solid #ccc;
-      padding: 15px;
-      margin-top: 15px;
+      padding: 10px;
+      margin-top: 10px;
       background-color: #fff;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-size: 8px; /* Font ridotto */
     }
     button {
       display: block;
-      margin: 40px auto 0;
-      padding: 12px 24px;
-      font-size: 16px;
+      margin: 30px auto 0;
+      padding: 8px 16px;
+      font-size: 10px;
       cursor: pointer;
       background-color: #333;
       color: #fff;
@@ -48,7 +51,13 @@
       border-radius: 6px;
     }
     textarea {
-      font-size: 0.9rem; /* Ridotto per contenere tutto */
+      font-size: 8px; /* Font ridotto */
+      padding: 4px;
+    }
+    .footer {
+      text-align: right;
+      font-size: 7px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -121,7 +130,7 @@
       <input type="number" min="1" max="10" id="valutazione">
     </div>
 
-    <p style="text-align:right; margin-top: 20px;">Testo redatto da <strong>Diego Pavoni</strong></p>
+    <p class="footer">Testo redatto da <strong>Diego Pavoni</strong></p>
   </div>
 
   <button onclick="generaPDF()">Scarica in PDF</button>
@@ -138,10 +147,10 @@
       const elemento = document.getElementById("modulo");
 
       html2pdf().set({
-        margin: [0.5, 0.5, 0.5, 0.5],  // Aggiungi margini per evitare il "taglio"
+        margin: [0.2, 0.2, 0.2, 0.2],  // Margini molto stretti
         filename: nomeFile,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 1.2, logging: true, dpi: 96 },
+        html2canvas: { scale: 0.8, logging: true, dpi: 96 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       }).from(elemento).save();
     }
