@@ -1,217 +1,156 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Modulo Valutazione Addetto</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test di Vendita</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
-      font-family: Helvetica, sans-serif;
-      font-size: 12px;
-      margin: 20px;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background: #f9f9f9;
     }
     h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
     label {
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 15px;
+      display: block;
     }
-    input[type="text"], input[type="date"], input[type="number"], textarea {
+    textarea, input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 6px;
+      padding: 8px;
       margin-top: 5px;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-    }
-    .section {
-      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
     }
     button {
-      display: block;
-      margin: 30px auto 0;
+      margin-top: 20px;
       padding: 10px 20px;
-      font-size: 14px;
-      background-color: #333;
-      color: #fff;
+      font-size: 16px;
+      background-color: #007bff;
       border: none;
+      color: white;
       border-radius: 5px;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
+  <h1>Test di Vendita</h1>
 
-  <h1>Scheda Valutazione Addetto</h1>
+  <form id="salesForm">
+    <label>DATA:</label><input type="text" id="data" required>
 
-  <div class="section">
-    <label for="data">Data</label>
-    <input type="date" id="data">
-    
-    <label for="puntoVendita">Punto Vendita</label>
-    <input type="text" id="puntoVendita">
-    
-    <label for="addetto">Addetto</label>
-    <input type="text" id="addetto">
-    
-    <label for="reparto">Reparto</label>
-    <input type="text" id="reparto">
-    
-    <label for="prodotto">Prodotto</label>
-    <input type="text" id="prodotto">
-  </div>
+    <label>PUNTO VENDITA:</label><input type="text" id="puntoVendita" required>
 
-  <div class="section">
-    <label for="saluto">Saluto</label>
-    <input type="text" id="saluto">
-    
-    <label for="approccio">Approccio</label>
-    <input type="text" id="approccio">
-    
-    <label for="empatia">Empatia</label>
-    <input type="text" id="empatia">
-  </div>
+    <label>ADDETTO:</label><input type="text" id="addetto" required>
 
-  <div class="section">
-    <label for="argomentazione">Argomentazione</label>
-    <input type="text" id="argomentazione">
-    
-    <label for="conoscenzeTecniche">Conoscenze Tecniche</label>
-    <input type="text" id="conoscenzeTecniche">
-  </div>
+    <label>REPARTO:</label><input type="text" id="reparto">
 
-  <div class="section">
-    <label for="upSelling">Up Selling</label>
-    <input type="text" id="upSelling">
-    
-    <label for="crossSelling">Cross Selling</label>
-    <input type="text" id="crossSelling">
-    
-    <label for="estensioni">Estensioni</label>
-    <input type="text" id="estensioni">
-    
-    <label for="gestori">Gestori</label>
-    <input type="text" id="gestori">
-  </div>
+    <label>PRODOTTO:</label><input type="text" id="prodotto">
 
-  <div class="section">
-    <label for="promoInCorso">Promo in Corso</label>
-    <input type="text" id="promoInCorso">
-    
-    <label for="indicazioniVendita">Indicazioni di Vendita</label>
-    <input type="text" id="indicazioniVendita">
-    
-    <label for="dilazioniPagamento">Dilazioni Pagamento</label>
-    <input type="text" id="dilazioniPagamento">
-  </div>
+    <label>AREA ACCOGLIENZA:</label>
+    <textarea id="accoglienza" rows="4" placeholder="- SALUTO\n- APPROCCIO\n- EMPATIA"></textarea>
 
-  <div class="section">
-    <label for="cartaFedelta">Carta Fedeltà</label>
-    <input type="text" id="cartaFedelta">
-    
-    <label for="myFanSafe">MyFanSafe</label>
-    <input type="text" id="myFanSafe">
-    
-    <label for="protocollo">Protocollo</label>
-    <input type="text" id="protocollo">
-  </div>
+    <label>AREA TRATTATIVA:</label>
+    <textarea id="trattativa" rows="3" placeholder="- ARGOMENTAZIONE\n- CONOSCENZE TECNICHE"></textarea>
 
-  <div class="section">
-    <label for="considerazioniFinali">Considerazioni Finali</label>
-    <textarea id="considerazioniFinali"></textarea>
-    
-    <label for="conclusione">Conclusione Complessiva</label>
-    <textarea id="conclusione"></textarea>
-    
-    <label for="valutazione">Valutazione Complessiva (da 1 a 10)</label>
-    <input type="number" id="valutazione" min="1" max="10">
-  </div>
+    <label>AREA KPI:</label>
+    <textarea id="kpi" rows="4" placeholder="- UP SELLING\n- CROSS SELLING\n- ESTENSIONI\n- GESTORI"></textarea>
 
-  <button onclick="generaPDF()">Genera PDF</button>
+    <label>AREA COMMERCIALE:</label>
+    <textarea id="commerciale" rows="4" placeholder="- PROMO IN CORSO\n- INDICAZIONI DI VENDITA\n- DILAZIONI PAGAMENTO"></textarea>
+
+    <label>AREA CONCLUSIVA:</label>
+    <textarea id="conclusiva" rows="3" placeholder="- CARTA FEDELTA'\n- MYFANSAFE\n- PROTOCOLLO"></textarea>
+
+    <label>CONSIDERAZIONI FINALI:</label>
+    <textarea id="considerazioni" rows="3"></textarea>
+
+    <label>CONCLUSIONE COMPLESSIVA:</label>
+    <textarea id="conclusione" rows="2"></textarea>
+
+    <label>VALUTAZIONE COMPLESSIVA (da 1 a 10):</label>
+    <input type="number" id="valutazione" min="1" max="10" required>
+
+    <button type="button" onclick="generaPDF()">Genera PDF</button>
+  </form>
 
   <script>
     function generaPDF() {
       const data = document.getElementById("data").value;
-      const puntoVendita = document.getElementById("puntoVendita").value;
+      const pdv = document.getElementById("puntoVendita").value;
       const addetto = document.getElementById("addetto").value;
       const reparto = document.getElementById("reparto").value;
       const prodotto = document.getElementById("prodotto").value;
-
-      const saluto = document.getElementById("saluto").value;
-      const approccio = document.getElementById("approccio").value;
-      const empatia = document.getElementById("empatia").value;
-
-      const argomentazione = document.getElementById("argomentazione").value;
-      const conoscenzeTecniche = document.getElementById("conoscenzeTecniche").value;
-
-      const upSelling = document.getElementById("upSelling").value;
-      const crossSelling = document.getElementById("crossSelling").value;
-      const estensioni = document.getElementById("estensioni").value;
-      const gestori = document.getElementById("gestori").value;
-
-      const promoInCorso = document.getElementById("promoInCorso").value;
-      const indicazioniVendita = document.getElementById("indicazioniVendita").value;
-      const dilazioniPagamento = document.getElementById("dilazioniPagamento").value;
-
-      const cartaFedelta = document.getElementById("cartaFedelta").value;
-      const myFanSafe = document.getElementById("myFanSafe").value;
-      const protocollo = document.getElementById("protocollo").value;
-
-      const considerazioniFinali = document.getElementById("considerazioniFinali").value;
+      const accoglienza = document.getElementById("accoglienza").value;
+      const trattativa = document.getElementById("trattativa").value;
+      const kpi = document.getElementById("kpi").value;
+      const commerciale = document.getElementById("commerciale").value;
+      const conclusiva = document.getElementById("conclusiva").value;
+      const considerazioni = document.getElementById("considerazioni").value;
       const conclusione = document.getElementById("conclusione").value;
       const valutazione = document.getElementById("valutazione").value;
 
-      const nomeFile = `TEST DI VENDITA - ${puntoVendita} - ${addetto} - ${valutazione}.pdf`;
+      const contenuto = `
+        TEST DI VENDITA
 
-      // Creiamo il testo per il PDF
-      const contenutoPDF = `
         DATA: ${data}
-        PUNTO VENDITA: ${puntoVendita}
+        PUNTO VENDITA: ${pdv}
         ADDETTO: ${addetto}
         REPARTO: ${reparto}
         PRODOTTO: ${prodotto}
 
-        AREA ACCOGLIENZA:
-        - SALUTO: ${saluto}
-        - APPROCCIO: ${approccio}
-        - EMPATIA: ${empatia}
+        --- AREA ACCOGLIENZA ---
+        ${accoglienza}
 
-        AREA TRATTATIVA:
-        - ARGOMENTAZIONE: ${argomentazione}
-        - CONOSCENZE TECNICHE: ${conoscenzeTecniche}
+        --- AREA TRATTATIVA ---
+        ${trattativa}
 
-        AREA KPI:
-        - UP SELLING: ${upSelling}
-        - CROSS SELLING: ${crossSelling}
-        - ESTENSIONI: ${estensioni}
-        - GESTORI: ${gestori}
+        --- AREA KPI ---
+        ${kpi}
 
-        AREA COMMERCIALE:
-        - PROMO IN CORSO: ${promoInCorso}
-        - INDICAZIONI DI VENDITA: ${indicazioniVendita}
-        - DILAZIONI PAGAMENTO: ${dilazioniPagamento}
+        --- AREA COMMERCIALE ---
+        ${commerciale}
 
-        AREA CONCLUSIVA:
-        - CARTA FEDELTA: ${cartaFedelta}
-        - MYFANSAFE: ${myFanSafe}
-        - PROTOCOLLO: ${protocollo}
+        --- AREA CONCLUSIVA ---
+        ${conclusiva}
 
-        CONSIDERAZIONI FINALI:
-        ${considerazioniFinali}
+        --- CONSIDERAZIONI FINALI ---
+        ${considerazioni}
 
-        CONCLUSIONE COMPLESSIVA:
+        --- CONCLUSIONE COMPLESSIVA ---
         ${conclusione}
 
-        VALUTAZIONE COMPLESSIVA: ${valutazione}
+        VALUTAZIONE COMPLESSIVA: ${valutazione}/10
 
         Testo redatto da Diego Pavoni
       `;
 
-      const doc = new jsPDF();
-      doc.text(contenutoPDF, 10, 10);
-      doc.save(nomeFile);
+      const opt = {
+        margin:       10,
+        filename:     `TEST DI VENDITA - ${pdv} - ${addetto} - ${valutazione}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      const element = document.createElement("div");
+      element.style.whiteSpace = "pre-wrap";
+      element.textContent = contenuto;
+
+      html2pdf().set(opt).from(element).save();
     }
   </script>
-
 </body>
 </html>
