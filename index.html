@@ -21,17 +21,18 @@
       margin-top: 15px;
       display: block;
     }
-    input[type="text"], input[type="date"], textarea, select {
+    input[type="text"], input[type="date"], textarea, select, input[type="number"] {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
       margin-bottom: 15px;
       box-sizing: border-box;
+      font-size: 0.9rem; /* Ridotto per contenere tutto */
     }
     .section {
       border: 1px solid #ccc;
-      padding: 20px;
-      margin-top: 30px;
+      padding: 15px;
+      margin-top: 15px;
       background-color: #fff;
       border-radius: 8px;
     }
@@ -45,6 +46,9 @@
       color: #fff;
       border: none;
       border-radius: 6px;
+    }
+    textarea {
+      font-size: 0.9rem; /* Ridotto per contenere tutto */
     }
   </style>
 </head>
@@ -134,10 +138,10 @@
       const elemento = document.getElementById("modulo");
 
       html2pdf().set({
-        margin: 0.5,
+        margin: [0.5, 0.5, 0.5, 0.5],  // Aggiungi margini per evitare il "taglio"
         filename: nomeFile,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 1.2, logging: true, dpi: 96 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       }).from(elemento).save();
     }
