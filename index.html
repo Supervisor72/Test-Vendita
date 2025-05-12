@@ -46,9 +46,6 @@
       border: none;
       border-radius: 6px;
     }
-    .input-container {
-      margin-bottom: 20px;
-    }
   </style>
 </head>
 <body>
@@ -117,12 +114,7 @@
       <textarea rows="3"></textarea>
 
       <label>Valutazione Complessiva (da 1 a 10)</label>
-      <input type="number" min="1" max="10">
-    </div>
-
-    <div class="input-container">
-      <label for="filename">Nome del file PDF</label>
-      <input type="text" id="filename" placeholder="Inserisci nome del file">
+      <input type="number" min="1" max="10" id="valutazione">
     </div>
 
     <p style="text-align:right; margin-top: 20px;">Testo redatto da <strong>Diego Pavoni</strong></p>
@@ -132,12 +124,18 @@
 
   <script>
     function generaPDF() {
+      const puntoVendita = document.getElementById("puntoVendita").value.trim();
+      const addetto = document.getElementById("addetto").value.trim();
+      const valutazione = document.getElementById("valutazione").value.trim();
+
+      // Costruisce il nome del file
+      const nomeFile = `TEST DI VENDITA - ${puntoVendita} - ${addetto} - ${valutazione}.pdf`;
+
       const elemento = document.getElementById("modulo");
-      const nomeFile = document.getElementById("filename").value.trim() || "valutazione_addetto"; // Default name if no input
 
       html2pdf().set({
         margin: 0.5,
-        filename: `${nomeFile}.pdf`,
+        filename: nomeFile,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
