@@ -50,39 +50,26 @@
 
   <form id="salesForm">
     <label>DATA:</label><input type="text" id="data" required>
-
     <label>PUNTO VENDITA:</label><input type="text" id="puntoVendita" required>
-
     <label>ADDETTO:</label><input type="text" id="addetto" required>
-
     <label>REPARTO:</label><input type="text" id="reparto">
-
     <label>PRODOTTO:</label><input type="text" id="prodotto">
-
     <label>AREA ACCOGLIENZA:</label>
     <textarea id="accoglienza" rows="4" placeholder="- SALUTO\n- APPROCCIO\n- EMPATIA"></textarea>
-
     <label>AREA TRATTATIVA:</label>
     <textarea id="trattativa" rows="3" placeholder="- ARGOMENTAZIONE\n- CONOSCENZE TECNICHE"></textarea>
-
     <label>AREA KPI:</label>
     <textarea id="kpi" rows="4" placeholder="- UP SELLING\n- CROSS SELLING\n- ESTENSIONI\n- GESTORI"></textarea>
-
     <label>AREA COMMERCIALE:</label>
     <textarea id="commerciale" rows="4" placeholder="- PROMO IN CORSO\n- INDICAZIONI DI VENDITA\n- DILAZIONI PAGAMENTO"></textarea>
-
     <label>AREA CONCLUSIVA:</label>
     <textarea id="conclusiva" rows="3" placeholder="- CARTA FEDELTA'\n- MYFANSAFE\n- PROTOCOLLO"></textarea>
-
     <label>CONSIDERAZIONI FINALI:</label>
     <textarea id="considerazioni" rows="3"></textarea>
-
     <label>CONCLUSIONE COMPLESSIVA:</label>
     <textarea id="conclusione" rows="2"></textarea>
-
     <label>VALUTAZIONE COMPLESSIVA (da 1 a 10):</label>
     <input type="number" id="valutazione" min="1" max="10" required>
-
     <button type="button" onclick="generaPDF()">Genera PDF</button>
   </form>
 
@@ -103,53 +90,40 @@
       const valutazione = document.getElementById("valutazione").value;
 
       const contenuto = `
-        TEST DI VENDITA
-
-        DATA: ${data}
-        PUNTO VENDITA: ${pdv}
-        ADDETTO: ${addetto}
-        REPARTO: ${reparto}
-        PRODOTTO: ${prodotto}
-
-        --- AREA ACCOGLIENZA ---
-        ${accoglienza}
-
-        --- AREA TRATTATIVA ---
-        ${trattativa}
-
-        --- AREA KPI ---
-        ${kpi}
-
-        --- AREA COMMERCIALE ---
-        ${commerciale}
-
-        --- AREA CONCLUSIVA ---
-        ${conclusiva}
-
-        --- CONSIDERAZIONI FINALI ---
-        ${considerazioni}
-
-        --- CONCLUSIONE COMPLESSIVA ---
-        ${conclusione}
-
-        VALUTAZIONE COMPLESSIVA: ${valutazione}/10
-
-        Testo redatto da Diego Pavoni
+        <h2>TEST DI VENDITA</h2>
+        <p><strong>DATA:</strong> ${data}</p>
+        <p><strong>PUNTO VENDITA:</strong> ${pdv}</p>
+        <p><strong>ADDETTO:</strong> ${addetto}</p>
+        <p><strong>REPARTO:</strong> ${reparto}</p>
+        <p><strong>PRODOTTO:</strong> ${prodotto}</p>
+        <h3>AREA ACCOGLIENZA</h3><p>${accoglienza}</p>
+        <h3>AREA TRATTATIVA</h3><p>${trattativa}</p>
+        <h3>AREA KPI</h3><p>${kpi}</p>
+        <h3>AREA COMMERCIALE</h3><p>${commerciale}</p>
+        <h3>AREA CONCLUSIVA</h3><p>${conclusiva}</p>
+        <h3>CONSIDERAZIONI FINALI</h3><p>${considerazioni}</p>
+        <h3>CONCLUSIONE COMPLESSIVA</h3><p>${conclusione}</p>
+        <h3>VALUTAZIONE COMPLESSIVA:</h3><p>${valutazione} / 10</p>
+        <p><em>Testo redatto da Diego Pavoni</em></p>
       `;
 
+      const output = document.createElement("div");
+      output.innerHTML = contenuto;
+      output.style.padding = "20px";
+      output.style.fontFamily = "Arial, sans-serif";
+
+      document.body.appendChild(output);
+
       const opt = {
-        margin:       10,
-        filename:     `TEST DI VENDITA - ${pdv} - ${addetto} - ${valutazione}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        margin: 5,
+        filename: `TEST DI VENDITA - ${pdv} - ${addetto} - ${valutazione}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      const element = document.createElement("div");
-      element.style.whiteSpace = "pre-wrap";
-      element.textContent = contenuto;
-
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(output).save().then(() => {
+        output.remove();
+      });
     }
   </script>
 </body>
