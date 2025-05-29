@@ -84,7 +84,7 @@
             background-position: right 0.8rem center;
             background-size: 1.2em;
         }
-        input[type="text"][readonly], input[type="date"][readonly] {
+        input[type="text"][readonly], input[type="date"][readonly], textarea[readonly] {
             background-color: var(--background-dark);
             cursor: not-allowed;
             border-color: #DDE2E7;
@@ -249,7 +249,7 @@
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="saluto">SALUTO:</label>
-                        <select id="saluto" name="saluto" required>
+                        <select id="saluto" name="saluto" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -259,7 +259,7 @@
                     </div>
                     <div class="form-group">
                         <label for="approccio">APPROCCIO:</label>
-                        <select id="approccio" name="approccio" required>
+                        <select id="approccio" name="approccio" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -269,7 +269,7 @@
                     </div>
                     <div class="form-group">
                         <label for="empatia">EMPATIA:</label>
-                        <select id="empatia" name="empatia" required>
+                        <select id="empatia" name="empatia" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -280,7 +280,7 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_saluto">Valutazione:</label>
-                    <select id="val_saluto" name="val_saluto" required onchange="calculateOverallRating()">
+                    <select id="val_saluto" name="val_saluto" required onchange="calculateOverallRating(); generateSummaryJudgment();">
                         <option value="">Seleziona...</option>
                         <option value="4">4 - GRAVEMENTE INSUFFICIENTE</option>
                         <option value="5">5 - INSUFFICIENTE</option>
@@ -297,7 +297,7 @@
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="trattativa">TRATTATIVA:</label>
-                        <select id="trattativa" name="trattativa" required>
+                        <select id="trattativa" name="trattativa" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -307,7 +307,7 @@
                     </div>
                     <div class="form-group">
                         <label for="upselling">UP SELLING:</label>
-                        <select id="upselling" name="upselling" required>
+                        <select id="upselling" name="upselling" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -317,7 +317,7 @@
                     </div>
                     <div class="form-group">
                         <label for="conoscenze">CONOSCENZE:</label>
-                        <select id="conoscenze" name="conoscenze" required>
+                        <select id="conoscenze" name="conoscenze" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -328,7 +328,7 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_trattativa">Valutazione:</label>
-                    <select id="val_trattativa" name="val_trattativa" required onchange="calculateOverallRating()">
+                    <select id="val_trattativa" name="val_trattativa" required onchange="calculateOverallRating(); generateSummaryJudgment();">
                         <option value="">Seleziona...</option>
                         <option value="4">4 - GRAVEMENTE INSUFFICIENTE</option>
                         <option value="5">5 - INSUFFICIENTE</option>
@@ -345,7 +345,7 @@
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="crossselling">CROSS SELLING:</label>
-                        <select id="crossselling" name="crossselling" required>
+                        <select id="crossselling" name="crossselling" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -355,7 +355,7 @@
                     </div>
                     <div class="form-group">
                         <label for="gestore">GESTORE:</label>
-                        <select id="gestore" name="gestore" required>
+                        <select id="gestore" name="gestore" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -365,7 +365,7 @@
                     </div>
                     <div class="form-group">
                         <label for="estensioni">ESTENSIONI:</label>
-                        <select id="estensioni" name="estensioni" required>
+                        <select id="estensioni" name="estensioni" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -376,7 +376,7 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_cross">Valutazione:</label>
-                    <select id="val_cross" name="val_cross" required onchange="calculateOverallRating()">
+                    <select id="val_cross" name="val_cross" required onchange="calculateOverallRating(); generateSummaryJudgment();">
                         <option value="">Seleziona...</option>
                         <option value="4">4 - GRAVEMENTE INSUFFICIENTE</option>
                         <option value="5">5 - INSUFFICIENTE</option>
@@ -393,7 +393,7 @@
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="promo">PROMO IN CORSO:</label>
-                        <select id="promo" name="promo" required>
+                        <select id="promo" name="promo" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -403,7 +403,7 @@
                     </div>
                     <div class="form-group">
                         <label for="indicazioni">INDICAZIONI:</label>
-                        <select id="indicazioni" name="indicazioni" required>
+                        <select id="indicazioni" name="indicazioni" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -413,7 +413,7 @@
                     </div>
                     <div class="form-group">
                         <label for="dilazioni">DILAZIONI:</label>
-                        <select id="dilazioni" name="dilazioni" required>
+                        <select id="dilazioni" name="dilazioni" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -424,7 +424,7 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_promo">Valutazione:</label>
-                    <select id="val_promo" name="val_promo" required onchange="calculateOverallRating()">
+                    <select id="val_promo" name="val_promo" required onchange="calculateOverallRating(); generateSummaryJudgment();">
                         <option value="">Seleziona...</option>
                         <option value="4">4 - GRAVEMENTE INSUFFICIENTE</option>
                         <option value="5">5 - INSUFFICIENTE</option>
@@ -441,7 +441,7 @@
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="cartafan">CARTA FAN:</label>
-                        <select id="cartafan" name="cartafan" required>
+                        <select id="cartafan" name="cartafan" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -451,7 +451,7 @@
                     </div>
                     <div class="form-group">
                         <label for="myfansafe">MYFANSAFE:</label>
-                        <select id="myfansafe" name="myfansafe" required>
+                        <select id="myfansafe" name="myfansafe" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -461,7 +461,7 @@
                     </div>
                     <div class="form-group">
                         <label for="protocollo">PROTOCOLLO:</label>
-                        <select id="protocollo" name="protocollo" required>
+                        <select id="protocollo" name="protocollo" required onchange="generateSummaryJudgment()">
                             <option value="">Seleziona...</option>
                             <option value="OK">OK</option>
                             <option value="MIGLIORABILE">MIGLIORABILE</option>
@@ -472,7 +472,7 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_carta">Valutazione:</label>
-                    <select id="val_carta" name="val_carta" required onchange="calculateOverallRating()">
+                    <select id="val_carta" name="val_carta" required onchange="calculateOverallRating(); generateSummaryJudgment();">
                         <option value="">Seleziona...</option>
                         <option value="4">4 - GRAVEMENTE INSUFFICIENTE</option>
                         <option value="5">5 - INSUFFICIENTE</option>
@@ -493,10 +493,15 @@
                 <label for="conclusione">CONCLUSIONE COMPLESSIVA:</label>
                 <textarea id="conclusione" name="conclusione" placeholder="Es: ANALISI COSTANTE TENERE SEMPRE IN TIRO"></textarea>
             </div>
-
+            
             <div class="form-group">
                 <label for="valutazione_complessiva">Valutazione Complessiva (media delle aree):</label>
                 <input type="text" id="valutazione_complessiva" name="valutazione_complessiva" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="giudizio_riepilogativo">Giudizio Riepilogativo:</label>
+                <textarea id="giudizio_riepilogativo" name="giudizio_riepilogativo" readonly></textarea>
             </div>
 
             <div class="form-group">
@@ -534,4 +539,247 @@
 
     <script>
         function formatDate(dateString) {
-            const date =
+            const date = new Date(dateString);
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('it-IT', options);
+        }
+
+        function calculateOverallRating() {
+            const valSaluto = parseFloat(document.getElementById('val_saluto').value);
+            const valTrattativa = parseFloat(document.getElementById('val_trattativa').value);
+            const valCross = parseFloat(document.getElementById('val_cross').value);
+            const valPromo = parseFloat(document.getElementById('val_promo').value);
+            const valCarta = parseFloat(document.getElementById('val_carta').value);
+
+            let sum = 0;
+            let count = 0;
+
+            if (!isNaN(valSaluto)) { sum += valSaluto; count++; }
+            if (!isNaN(valTrattativa)) { sum += valTrattativa; count++; }
+            if (!isNaN(valCross)) { sum += valCross; count++; }
+            if (!isNaN(valPromo)) { sum += valPromo; count++; }
+            if (!isNaN(valCarta)) { sum += valCarta; count++; }
+
+            if (count > 0) {
+                const average = sum / count;
+                document.getElementById('valutazione_complessiva').value = average.toFixed(1); // Arrotonda a un decimale
+            } else {
+                document.getElementById('valutazione_complessiva').value = '';
+            }
+        }
+
+        function generateSummaryJudgment() {
+            const overallRating = parseFloat(document.getElementById('valutazione_complessiva').value);
+            let judgment = '';
+
+            // Check if overallRating is a valid number
+            if (isNaN(overallRating)) {
+                document.getElementById('giudizio_riepilogativo').value = 'Compila tutte le valutazioni numeriche per generare un giudizio riepilogativo.';
+                return;
+            }
+
+            // Base judgment on overall numeric rating
+            if (overallRating >= 8.5) {
+                judgment += 'Eccellente prestazione generale! L\'addetto ha dimostrato piena padronanza delle tecniche di vendita e un'ottima gestione del cliente. ';
+            } else if (overallRating >= 7.0) {
+                judgment += 'Buona performance complessiva. Sono state riscontrate solide capacità di vendita. ';
+            } else if (overallRating >= 6.0) {
+                judgment += 'Prestazione sufficiente. Ci sono margini di miglioramento in alcune aree chiave. ';
+            } else {
+                judgment += 'Prestazione insufficiente. Sono necessarie azioni correttive immediate e un piano di formazione mirato. ';
+            }
+
+            let areasToImprove = [];
+
+            // Check qualitative ratings for specific feedback
+            const areas = {
+                'Accoglienza': ['saluto', 'approccio', 'empatia'],
+                'Gestione Vendita': ['trattativa', 'upselling', 'conoscenze'],
+                'Gestione KPI': ['crossselling', 'gestore', 'estensioni'],
+                'Uso Armi': ['promo', 'indicazioni', 'dilazioni'],
+                'Conclusione Vendita': ['cartafan', 'myfansafe', 'protocollo']
+            };
+
+            for (const area in areas) {
+                let issuesInArea = [];
+                areas[area].forEach(item => {
+                    const value = document.getElementById(item).value;
+                    if (value === 'MALE' || value === 'NULLA') {
+                        issuesInArea.push(item.replace(/([A-Z])/g, ' $1').trim().toUpperCase()); // Format "myfansafe" to "MY FAN SAFE"
+                    }
+                });
+                if (issuesInArea.length > 0) {
+                    areasToImprove.push(`${area} (problematiche su: ${issuesInArea.join(', ')})`);
+                } else {
+                     // Check if all are "OK" in an area
+                    const allOk = areas[area].every(item => document.getElementById(item).value === 'OK');
+                    if (allOk && overallRating >= 7.0) {
+                        judgment += `L'area "${area}" è stata gestita in modo ottimo. `;
+                    }
+                }
+            }
+
+            if (areasToImprove.length > 0) {
+                judgment += 'Si raccomanda di focalizzare l\'attenzione sulle seguenti aree: ' + areasToImprove.join('; ') + '. ';
+            } else if (overallRating >= 7.0) {
+                 judgment += 'Tutte le aree qualitative sono state gestite in modo positivo. '
+            }
+
+            document.getElementById('giudizio_riepilogativo').value = judgment.trim();
+        }
+
+
+        function generateReport() {
+            const form = document.getElementById('testVenditaForm');
+            const formData = new FormData(form);
+            
+            const pdv = formData.get('pdv');
+            const data = document.getElementById('data').value;
+            const addetto = formData.get('addetto');
+            const reparto = formData.get('reparto');
+            const redattore = formData.get('redattore');
+            const ruolo = formData.get('ruolo');
+            
+            // Per includere i valori testuali delle valutazioni (es. "4 - GRAVEMENTE INSUFFICIENTE")
+            const valSalutoText = document.getElementById('val_saluto').options[document.getElementById('val_saluto').selectedIndex].text;
+            const valTrattativaText = document.getElementById('val_trattativa').options[document.getElementById('val_trattativa').selectedIndex].text;
+            const valCrossText = document.getElementById('val_cross').options[document.getElementById('val_cross').selectedIndex].text;
+            const valPromoText = document.getElementById('val_promo').options[document.getElementById('val_promo').selectedIndex].text;
+            const valCartaText = document.getElementById('val_carta').options[document.getElementById('val_carta').selectedIndex].text;
+
+
+            const report = `**PDV TRONY : ${pdv.toUpperCase()}        DATA. ${data}**
+
+ADDETTO : ${addetto}
+
+REPARTO / ARGOMENTO : ${reparto.toUpperCase()}
+
+* **ACCOGLIENZA**
+    * SALUTO: ${formData.get('saluto')}
+    * APPROCCIO: ${formData.get('approccio')}
+    * EMPATIA: ${formData.get('empatia')}
+    Valutazione: ${valSalutoText}
+
+* **GESTIONE VENDITA**
+    * TRATTATIVA: ${formData.get('trattativa')}
+    * UP SELLING: ${formData.get('upselling')}
+    * CONOSCENZE: ${formData.get('conoscenze')}
+    Valutazione : ${valTrattativaText}
+
+* **GESTIONE KPI**
+    * CROSS SELLING: ${formData.get('crossselling')}
+    * GESTORE: ${formData.get('gestore')}
+    * ESTENSIONI: ${formData.get('estensioni')}
+    Valutazione : ${valCrossText}
+
+* **USO ARMI**
+    * PROMO IN CORSO: ${formData.get('promo')}
+    * INDICAZIONI: ${formData.get('indicazioni')}
+    * DILAZIONI: ${formData.get('dilazioni')}
+    Valutazione : ${valPromoText}
+
+* **CONCLUSIONE VENDITA**
+    * CARTA FAN: ${formData.get('cartafan')}
+    * MYFANSAFE: ${formData.get('myfansafe')}
+    * PROTOCOLLO: ${formData.get('protocollo')}
+    Valutazione: ${valCartaText}
+
+* **CONSIDERAZIONI : ${formData.get('considerazioni')}**
+
+* **CONCLUSIONE COMPLESSIVA : ${formData.get('conclusione')}**
+
+* **Valutazione Complessiva (media): ${formData.get('valutazione_complessiva')}**
+
+* **Giudizio Riepilogativo: ${formData.get('giudizio_riepilogativo')}**
+
+TEST DI VENDITA REDATTO DA: ${redattore.toUpperCase()}
+RUOLO: ${ruolo.toUpperCase()}`;
+
+            return report;
+        }
+
+        function sendToTelegram() {
+            const report = generateReport();
+            const encodedReport = encodeURIComponent(report);
+            const telegramUrl = `https://t.me/share/url?url=&text=${encodedReport}`;
+            window.open(telegramUrl, '_blank');
+        }
+
+        function sendEmail() {
+            const report = generateReport();
+            const pdv = document.getElementById('pdv').value;
+            const addetto = document.getElementById('addetto').value;
+            const data = document.getElementById('data').value;
+
+            const subject = encodeURIComponent(`Test di Vendita TRONY - ${pdv} - ${addetto} - ${data}`);
+            const body = encodeURIComponent(report);
+
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function exportToWord() {
+            const report = generateReport();
+            
+            // Creazione del documento Word
+            const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Test di Vendita TRONY</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.5; }
+                        .header { font-weight: bold; text-align: center; margin-bottom: 20px; }
+                        .section { margin-bottom: 15px; }
+                        .bold { font-weight: bold; }
+                    </style>
+                </head>
+                <body>`;
+            
+            const body = report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                     .replace(/\n/g, '<br>');
+            
+            const footer = '</body></html>';
+            
+            const htmlContent = header + '<div>' + body + '</div>' + footer;
+            
+            const blob = new Blob([htmlContent], {
+                type: 'application/msword'
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Test_Vendita_TRONY_${new Date().toISOString().split('T')[0]}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Imposta la data di oggi come default e la rende non modificabile
+        function setCurrentDate() {
+            const today = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = today.toLocaleDateString('it-IT', options);
+            document.getElementById('data').value = formattedDate;
+        }
+        
+        // Imposta la data quando la pagina si carica
+        document.addEventListener('DOMContentLoaded', () => {
+            setCurrentDate();
+            // Aggiungi un listener anche per assicurarti che la media e il giudizio vengano calcolati all'inizio se ci sono valori predefiniti
+            calculateOverallRating();
+            generateSummaryJudgment();
+        });
+    </script>
+</body>
+</html>
