@@ -228,12 +228,20 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_saluto">Valutazione:</label>
-                    <input type="number" id="val_saluto" name="val_saluto" min="1" max="10" step="0.5" required>
+                    <select id="val_saluto" name="val_saluto" required>
+                        <option value="">Seleziona...</option>
+                        <option value="4 - GRAVEMENTE INSUFFICIENTE">4 - GRAVEMENTE INSUFFICIENTE</option>
+                        <option value="5 - INSUFFICIENTE">5 - INSUFFICIENTE</option>
+                        <option value="6 - SUFFICIENTE">6 - SUFFICIENTE</option>
+                        <option value="7 - BUONO">7 - BUONO</option>
+                        <option value="8 - DISTINTO">8 - DISTINTO</option>
+                        <option value="9 - OTTIMO">9 - OTTIMO</option>
+                    </select>
                 </div>
             </div>
 
             <div class="evaluation-section">
-                <div class="evaluation-title">💼 TRATTATIVA / UP SELLING / CONOSCENZE TECNICHE</div>
+                <div class="evaluation-title">💼 GESTIONE VENDITA</div>
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="trattativa">TRATTATIVA:</label>
@@ -268,12 +276,20 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_trattativa">Valutazione:</label>
-                    <input type="number" id="val_trattativa" name="val_trattativa" min="1" max="10" step="0.5" required>
+                    <select id="val_trattativa" name="val_trattativa" required>
+                        <option value="">Seleziona...</option>
+                        <option value="4 - GRAVEMENTE INSUFFICIENTE">4 - GRAVEMENTE INSUFFICIENTE</option>
+                        <option value="5 - INSUFFICIENTE">5 - INSUFFICIENTE</option>
+                        <option value="6 - SUFFICIENTE">6 - SUFFICIENTE</option>
+                        <option value="7 - BUONO">7 - BUONO</option>
+                        <option value="8 - DISTINTO">8 - DISTINTO</option>
+                        <option value="9 - OTTIMO">9 - OTTIMO</option>
+                    </select>
                 </div>
             </div>
 
             <div class="evaluation-section">
-                <div class="evaluation-title">🔄 CROSS SELLING / GESTORE / ESTENSIONI</div>
+                <div class="evaluation-title">🔄 GESTIONE KPI</div>
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="crossselling">CROSS SELLING:</label>
@@ -308,12 +324,20 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_cross">Valutazione:</label>
-                    <input type="number" id="val_cross" name="val_cross" min="1" max="10" step="0.5" required>
+                    <select id="val_cross" name="val_cross" required>
+                        <option value="">Seleziona...</option>
+                        <option value="4 - GRAVEMENTE INSUFFICIENTE">4 - GRAVEMENTE INSUFFICIENTE</option>
+                        <option value="5 - INSUFFICIENTE">5 - INSUFFICIENTE</option>
+                        <option value="6 - SUFFICIENTE">6 - SUFFICIENTE</option>
+                        <option value="7 - BUONO">7 - BUONO</option>
+                        <option value="8 - DISTINTO">8 - DISTINTO</option>
+                        <option value="9 - OTTIMO">9 - OTTIMO</option>
+                    </select>
                 </div>
             </div>
 
             <div class="evaluation-section">
-                <div class="evaluation-title">🎯 PROMO IN CORSO / INDICAZIONI VENDITA / DILAZIONI PAGAMENTO</div>
+                <div class="evaluation-title">🎯 USO ARMI</div>
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="promo">PROMO IN CORSO:</label>
@@ -348,12 +372,20 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_promo">Valutazione:</label>
-                    <input type="number" id="val_promo" name="val_promo" min="1" max="10" step="0.5" required>
+                    <select id="val_promo" name="val_promo" required>
+                        <option value="">Seleziona...</option>
+                        <option value="4 - GRAVEMENTE INSUFFICIENTE">4 - GRAVEMENTE INSUFFICIENTE</option>
+                        <option value="5 - INSUFFICIENTE">5 - INSUFFICIENTE</option>
+                        <option value="6 - SUFFICIENTE">6 - SUFFICIENTE</option>
+                        <option value="7 - BUONO">7 - BUONO</option>
+                        <option value="8 - DISTINTO">8 - DISTINTO</option>
+                        <option value="9 - OTTIMO">9 - OTTIMO</option>
+                    </select>
                 </div>
             </div>
 
             <div class="evaluation-section">
-                <div class="evaluation-title">💳 PROPOSTA CARTA FAN - MYFANSAFE - PROTOCOLLO</div>
+                <div class="evaluation-title">💳 CONCLUSIONE VENDITA</div>
                 <div class="three-columns">
                     <div class="form-group">
                         <label for="cartafan">CARTA FAN:</label>
@@ -388,7 +420,15 @@
                 </div>
                 <div class="rating-container">
                     <label for="val_carta">Valutazione:</label>
-                    <input type="number" id="val_carta" name="val_carta" min="1" max="10" step="0.5" required>
+                    <select id="val_carta" name="val_carta" required>
+                        <option value="">Seleziona...</option>
+                        <option value="4 - GRAVEMENTE INSUFFICIENTE">4 - GRAVEMENTE INSUFFICIENTE</option>
+                        <option value="5 - INSUFFICIENTE">5 - INSUFFICIENTE</option>
+                        <option value="6 - SUFFICIENTE">6 - SUFFICIENTE</option>
+                        <option value="7 - BUONO">7 - BUONO</option>
+                        <option value="8 - DISTINTO">8 - DISTINTO</option>
+                        <option value="9 - OTTIMO">9 - OTTIMO</option>
+                    </select>
                 </div>
             </div>
 
@@ -472,25 +512,25 @@ REPARTO / ARGOMENTO : ${reparto.toUpperCase()}
     * EMPATIA: ${formData.get('empatia')}
     Valutazione: ${formData.get('val_saluto')}
 
-* **TRATTATIVA / UP SELLING / CONOSCENZE TECNICHE**
+* **GESTIONE VENDITA**
     * TRATTATIVA: ${formData.get('trattativa')}
     * UP SELLING: ${formData.get('upselling')}
     * CONOSCENZE: ${formData.get('conoscenze')}
     Valutazione : ${formData.get('val_trattativa')}
 
-* **CROSS SELLING / GESTORE / ESTENSIONI**
+* **GESTIONE KPI**
     * CROSS SELLING: ${formData.get('crossselling')}
     * GESTORE: ${formData.get('gestore')}
     * ESTENSIONI: ${formData.get('estensioni')}
     Valutazione : ${formData.get('val_cross')}
 
-* **PROMO IN CORSO / INDICAZIONI VENDITA / DILAZIONI PAGAMENTO**
+* **USO ARMI**
     * PROMO IN CORSO: ${formData.get('promo')}
     * INDICAZIONI: ${formData.get('indicazioni')}
     * DILAZIONI: ${formData.get('dilazioni')}
     Valutazione : ${formData.get('val_promo')}
 
-* **PROPOSTA CARTA FAN - MYFANSAFE - PROTOCOLLO**
+* **CONCLUSIONE VENDITA**
     * CARTA FAN: ${formData.get('cartafan')}
     * MYFANSAFE: ${formData.get('myfansafe')}
     * PROTOCOLLO: ${formData.get('protocollo')}
