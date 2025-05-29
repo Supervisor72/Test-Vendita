@@ -113,6 +113,14 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(43,87,154,0.4);
         }
+        .btn-email {
+            background: linear-gradient(135deg, #dc3545, #fd7e14); /* Red-Orange gradient */
+            color: white;
+        }
+        .btn-email:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.4);
+        }
         textarea {
             resize: vertical;
             min-height: 80px;
@@ -422,6 +430,9 @@
                 <button type="button" class="btn btn-word" onclick="exportToWord()">
                     📄 Esporta in Word
                 </button>
+                <button type="button" class="btn btn-email" onclick="sendEmail()">
+                    📧 Invia Email
+                </button>
             </div>
         </form>
     </div>
@@ -502,6 +513,18 @@ RUOLO: ${ruolo.toUpperCase()}`;
             const encodedReport = encodeURIComponent(report);
             const telegramUrl = `https://t.me/share/url?text=${encodedReport}`;
             window.open(telegramUrl, '_blank');
+        }
+
+        function sendEmail() {
+            const report = generateReport();
+            const pdv = document.getElementById('pdv').value;
+            const addetto = document.getElementById('addetto').value;
+            const data = document.getElementById('data').value;
+
+            const subject = encodeURIComponent(`Test di Vendita TRONY - ${pdv} - ${addetto} - ${data}`);
+            const body = encodeURIComponent(report);
+
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
 
         function exportToWord() {
