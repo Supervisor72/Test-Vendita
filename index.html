@@ -223,7 +223,7 @@
                 </div>
                 <div class="form-group">
                     <label for="data">DATA:</label>
-                    <input type="text" id="data" name="data" readonly>
+                    <input type="text" id="data" name="data" readonly placeholder="Data attuale verrà inserita qui">
                 </div>
             </div>
 
@@ -538,8 +538,7 @@
     </div>
 
     <script>
-        function formatDate(dateString) {
-            const date = new Date(dateString);
+        function formatDate(date) {
             const options = { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -576,16 +575,25 @@
         function generateSummaryJudgment() {
             const overallRating = parseFloat(document.getElementById('valutazione_complessiva').value);
             let judgment = '';
+            let isAnyRatingSelected = false;
 
-            // Check if overallRating is a valid number
-            if (isNaN(overallRating)) {
-                document.getElementById('giudizio_riepilogativo').value = 'Compila tutte le valutazioni numeriche per generare un giudizio riepilogativo.';
+            // Check if at least one numerical rating is selected
+            const numericalRatings = ['val_saluto', 'val_trattativa', 'val_cross', 'val_promo', 'val_carta'];
+            for (const id of numericalRatings) {
+                if (document.getElementById(id).value !== '') {
+                    isAnyRatingSelected = true;
+                    break;
+                }
+            }
+
+            if (!isAnyRatingSelected || isNaN(overallRating)) {
+                document.getElementById('giudizio_riepilogativo').value = 'Seleziona le valutazioni numeriche e qualitative per generare un giudizio riepilogativo.';
                 return;
             }
 
             // Base judgment on overall numeric rating
             if (overallRating >= 8.5) {
-                judgment += 'Eccellente prestazione generale! L\'addetto ha dimostrato piena padronanza delle tecniche di vendita e un'ottima gestione del cliente. ';
+                judgment += 'Eccellente prestazione generale! L\'addetto ha dimostrato piena padronanza delle tecniche di vendita e un\'ottima gestione del cliente. ';
             } else if (overallRating >= 7.0) {
                 judgment += 'Buona performance complessiva. Sono state riscontrate solide capacità di vendita. ';
             } else if (overallRating >= 6.0) {
@@ -595,6 +603,7 @@
             }
 
             let areasToImprove = [];
+            let areasWithOk = [];
 
             // Check qualitative ratings for specific feedback
             const areas = {
@@ -607,32 +616,34 @@
 
             for (const area in areas) {
                 let issuesInArea = [];
+                let allAreaOk = true;
                 areas[area].forEach(item => {
                     const value = document.getElementById(item).value;
                     if (value === 'MALE' || value === 'NULLA') {
                         issuesInArea.push(item.replace(/([A-Z])/g, ' $1').trim().toUpperCase()); // Format "myfansafe" to "MY FAN SAFE"
+                        allAreaOk = false;
+                    } else if (value === 'MIGLIORABILE') {
+                         issuesInArea.push(`${item.replace(/([A-Z])/g, ' $1').trim().toUpperCase()} (da migliorare)`);
+                         allAreaOk = false;
                     }
                 });
                 if (issuesInArea.length > 0) {
                     areasToImprove.push(`${area} (problematiche su: ${issuesInArea.join(', ')})`);
-                } else {
-                     // Check if all are "OK" in an area
-                    const allOk = areas[area].every(item => document.getElementById(item).value === 'OK');
-                    if (allOk && overallRating >= 7.0) {
-                        judgment += `L'area "${area}" è stata gestita in modo ottimo. `;
-                    }
+                } else if (allAreaOk && areas[area].every(item => document.getElementById(item).value === 'OK')) {
+                    areasWithOk.push(area);
                 }
             }
 
             if (areasToImprove.length > 0) {
                 judgment += 'Si raccomanda di focalizzare l\'attenzione sulle seguenti aree: ' + areasToImprove.join('; ') + '. ';
-            } else if (overallRating >= 7.0) {
-                 judgment += 'Tutte le aree qualitative sono state gestite in modo positivo. '
+            } 
+            
+            if (areasWithOk.length > 0) {
+                judgment += `In particolare, le aree di ${areasWithOk.join(', ')} sono state gestite in modo ottimo. `;
             }
 
             document.getElementById('giudizio_riepilogativo').value = judgment.trim();
         }
-
 
         function generateReport() {
             const form = document.getElementById('testVenditaForm');
@@ -646,11 +657,12 @@
             const ruolo = formData.get('ruolo');
             
             // Per includere i valori testuali delle valutazioni (es. "4 - GRAVEMENTE INSUFFICIENTE")
-            const valSalutoText = document.getElementById('val_saluto').options[document.getElementById('val_saluto').selectedIndex].text;
-            const valTrattativaText = document.getElementById('val_trattativa').options[document.getElementById('val_trattativa').selectedIndex].text;
-            const valCrossText = document.getElementById('val_cross').options[document.getElementById('val_cross').selectedIndex].text;
-            const valPromoText = document.getElementById('val_promo').options[document.getElementById('val_promo').selectedIndex].text;
-            const valCartaText = document.getElementById('val_carta').options[document.getElementById('val_carta').selectedIndex].text;
+            // Aggiungo il controllo `?.text || ''` per gestire i casi in cui non è selezionata un'opzione
+            const valSalutoText = document.getElementById('val_saluto').options[document.getElementById('val_saluto').selectedIndex]?.text || '';
+            const valTrattativaText = document.getElementById('val_trattativa').options[document.getElementById('val_trattativa').selectedIndex]?.text || '';
+            const valCrossText = document.getElementById('val_cross').options[document.getElementById('val_cross').selectedIndex]?.text || '';
+            const valPromoText = document.getElementById('val_promo').options[document.getElementById('val_promo').selectedIndex]?.text || '';
+            const valCartaText = document.getElementById('val_carta').options[document.getElementById('val_carta').selectedIndex]?.text || '';
 
 
             const report = `**PDV TRONY : ${pdv.toUpperCase()}        DATA. ${data}**
@@ -660,45 +672,45 @@ ADDETTO : ${addetto}
 REPARTO / ARGOMENTO : ${reparto.toUpperCase()}
 
 * **ACCOGLIENZA**
-    * SALUTO: ${formData.get('saluto')}
-    * APPROCCIO: ${formData.get('approccio')}
-    * EMPATIA: ${formData.get('empatia')}
+    * SALUTO: ${formData.get('saluto') || 'N/D'}
+    * APPROCCIO: ${formData.get('approccio') || 'N/D'}
+    * EMPATIA: ${formData.get('empatia') || 'N/D'}
     Valutazione: ${valSalutoText}
 
 * **GESTIONE VENDITA**
-    * TRATTATIVA: ${formData.get('trattativa')}
-    * UP SELLING: ${formData.get('upselling')}
-    * CONOSCENZE: ${formData.get('conoscenze')}
+    * TRATTATIVA: ${formData.get('trattativa') || 'N/D'}
+    * UP SELLING: ${formData.get('upselling') || 'N/D'}
+    * CONOSCENZE: ${formData.get('conoscenze') || 'N/D'}
     Valutazione : ${valTrattativaText}
 
 * **GESTIONE KPI**
-    * CROSS SELLING: ${formData.get('crossselling')}
-    * GESTORE: ${formData.get('gestore')}
-    * ESTENSIONI: ${formData.get('estensioni')}
+    * CROSS SELLING: ${formData.get('crossselling') || 'N/D'}
+    * GESTORE: ${formData.get('gestore') || 'N/D'}
+    * ESTENSIONI: ${formData.get('estensioni') || 'N/D'}
     Valutazione : ${valCrossText}
 
 * **USO ARMI**
-    * PROMO IN CORSO: ${formData.get('promo')}
-    * INDICAZIONI: ${formData.get('indicazioni')}
-    * DILAZIONI: ${formData.get('dilazioni')}
+    * PROMO IN CORSO: ${formData.get('promo') || 'N/D'}
+    * INDICAZIONI: ${formData.get('indicazioni') || 'N/D'}
+    * DILAZIONI: ${formData.get('dilazioni') || 'N/D'}
     Valutazione : ${valPromoText}
 
 * **CONCLUSIONE VENDITA**
-    * CARTA FAN: ${formData.get('cartafan')}
-    * MYFANSAFE: ${formData.get('myfansafe')}
-    * PROTOCOLLO: ${formData.get('protocollo')}
+    * CARTA FAN: ${formData.get('cartafan') || 'N/D'}
+    * MYFANSAFE: ${formData.get('myfansafe') || 'N/D'}
+    * PROTOCOLLO: ${formData.get('protocollo') || 'N/D'}
     Valutazione: ${valCartaText}
 
-* **CONSIDERAZIONI : ${formData.get('considerazioni')}**
+* **CONSIDERAZIONI : ${formData.get('considerazioni') || 'N/D'}**
 
-* **CONCLUSIONE COMPLESSIVA : ${formData.get('conclusione')}**
+* **CONCLUSIONE COMPLESSIVA : ${formData.get('conclusione') || 'N/D'}**
 
-* **Valutazione Complessiva (media): ${formData.get('valutazione_complessiva')}**
+* **Valutazione Complessiva (media): ${formData.get('valutazione_complessiva') || 'N/D'}**
 
-* **Giudizio Riepilogativo: ${formData.get('giudizio_riepilogativo')}**
+* **Giudizio Riepilogativo: ${formData.get('giudizio_riepilogativo') || 'N/D'}**
 
-TEST DI VENDITA REDATTO DA: ${redattore.toUpperCase()}
-RUOLO: ${ruolo.toUpperCase()}`;
+TEST DI VENDITA REDATTO DA: ${redattore.toUpperCase() || 'N/D'}
+RUOLO: ${ruolo.toUpperCase() || 'N/D'}`;
 
             return report;
         }
@@ -716,7 +728,7 @@ RUOLO: ${ruolo.toUpperCase()}`;
             const addetto = document.getElementById('addetto').value;
             const data = document.getElementById('data').value;
 
-            const subject = encodeURIComponent(`Test di Vendita TRONY - ${pdv} - ${addetto} - ${data}`);
+            const subject = encodeURIComponent(`Test di Vendita TRONY - ${pdv || 'N/D'} - ${addetto || 'N/D'} - ${data || 'N/D'}`);
             const body = encodeURIComponent(report);
 
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
@@ -739,12 +751,13 @@ RUOLO: ${ruolo.toUpperCase()}`;
                 </head>
                 <body>`;
             
-            const body = report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Sostituisci i tag Markdown con tag HTML per il grassetto e le interruzioni di riga
+            const bodyContent = report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                                      .replace(/\n/g, '<br>');
             
             const footer = '</body></html>';
             
-            const htmlContent = header + '<div>' + body + '</div>' + footer;
+            const htmlContent = header + '<div>' + bodyContent + '</div>' + footer;
             
             const blob = new Blob([htmlContent], {
                 type: 'application/msword'
@@ -763,13 +776,7 @@ RUOLO: ${ruolo.toUpperCase()}`;
         // Imposta la data di oggi come default e la rende non modificabile
         function setCurrentDate() {
             const today = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const formattedDate = today.toLocaleDateString('it-IT', options);
+            const formattedDate = formatDate(today); // Usa la funzione formatDate
             document.getElementById('data').value = formattedDate;
         }
         
