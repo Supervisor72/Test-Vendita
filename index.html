@@ -735,6 +735,15 @@ RUOLO: ${ruolo.toUpperCase() || 'N/D'}`;
         }
 
         function exportToWord() {
+            const pdv = document.getElementById('pdv').value;
+            const addetto = document.getElementById('addetto').value;
+            const overallRating = document.getElementById('valutazione_complessiva').value;
+
+            if (!pdv || !addetto || !overallRating) {
+                alert('Assicurati di aver compilato il Punto Vendita, l\'Addetto e le Valutazioni per generare il nome del file.');
+                return;
+            }
+
             const report = generateReport();
             
             // Creazione del documento Word
@@ -766,7 +775,15 @@ RUOLO: ${ruolo.toUpperCase() || 'N/D'}`;
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Test_Vendita_TRONY_${new Date().toISOString().split('T')[0]}.doc`;
+
+            // Nome del file dinamico
+            // Sostituisci spazi con underscore e punti con virgole per il nome del file
+            const fileNamePdv = pdv.replace(/\s/g, '_');
+            const fileNameAddetto = addetto.replace(/\s/g, '_');
+            const fileNameOverallRating = overallRating.replace('.', ','); // Sostituisce il punto con la virgola
+
+            link.download = `Test_Vendita_${fileNamePdv}_${fileNameAddetto}_${fileNameOverallRating}.doc`;
+            
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
