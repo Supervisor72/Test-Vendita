@@ -1,130 +1,562 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Test di Vendita</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-      background: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
-    textarea, input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test di Vendita TRONY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .evaluation-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .evaluation-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .rating-container label {
+            margin: 0;
+            font-weight: normal;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-telegram {
+            background: linear-gradient(135deg, #0088cc, #229ED9);
+            color: white;
+        }
+        .btn-telegram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,136,204,0.4);
+        }
+        .btn-word {
+            background: linear-gradient(135deg, #2b579a, #4472c4);
+            color: white;
+        }
+        .btn-word:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(43,87,154,0.4);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .three-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            .three-columns {
+                grid-template-columns: 1fr;
+            }
+            .buttons-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Test di Vendita</h1>
+    <div class="form-container">
+        <div class="header">
+            <h1>📊 TEST DI VENDITA TRONY</h1>
+        </div>
 
-  <form id="salesForm">
-    <label>DATA:</label><input type="text" id="data" required>
-    <label>PUNTO VENDITA:</label><input type="text" id="puntoVendita" required>
-    <label>ADDETTO:</label><input type="text" id="addetto" required>
-    <label>REPARTO:</label><input type="text" id="reparto">
-    <label>PRODOTTO:</label><input type="text" id="prodotto">
-    <label>AREA ACCOGLIENZA:</label>
-    <textarea id="accoglienza" rows="4" placeholder="- SALUTO\n- APPROCCIO\n- EMPATIA"></textarea>
-    <label>AREA TRATTATIVA:</label>
-    <textarea id="trattativa" rows="3" placeholder="- ARGOMENTAZIONE\n- CONOSCENZE TECNICHE"></textarea>
-    <label>AREA KPI:</label>
-    <textarea id="kpi" rows="4" placeholder="- UP SELLING\n- CROSS SELLING\n- ESTENSIONI\n- GESTORI"></textarea>
-    <label>AREA COMMERCIALE:</label>
-    <textarea id="commerciale" rows="4" placeholder="- PROMO IN CORSO\n- INDICAZIONI DI VENDITA\n- DILAZIONI PAGAMENTO"></textarea>
-    <label>AREA CONCLUSIVA:</label>
-    <textarea id="conclusiva" rows="3" placeholder="- CARTA FEDELTA'\n- MYFANSAFE\n- PROTOCOLLO"></textarea>
-    <label>CONSIDERAZIONI FINALI:</label>
-    <textarea id="considerazioni" rows="3"></textarea>
-    <label>CONCLUSIONE COMPLESSIVA:</label>
-    <textarea id="conclusione" rows="2"></textarea>
-    <label>VALUTAZIONE COMPLESSIVA (da 1 a 10):</label>
-    <input type="number" id="valutazione" min="1" max="10" required>
-    <button type="button" onclick="generaPDF()">Genera PDF</button>
-  </form>
+        <form id="testVenditaForm">
+            <div class="two-columns">
+                <div class="form-group">
+                    <label for="pdv">PUNTO VENDITA:</label>
+                    <select id="pdv" name="pdv" required>
+                        <option value="">Seleziona punto vendita...</option>
+                        <option value="FANO">FANO</option>
+                        <option value="MONSANO">MONSANO</option>
+                        <option value="OSIMO">OSIMO</option>
+                        <option value="MACERATA">MACERATA</option>
+                        <option value="CIVITANOVA">CIVITANOVA</option>
+                        <option value="PESARO">PESARO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="data">DATA:</label>
+                    <input type="text" id="data" name="data" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
+                </div>
+            </div>
 
-  <script>
-    function generaPDF() {
-      const data = document.getElementById("data").value;
-      const pdv = document.getElementById("puntoVendita").value;
-      const addetto = document.getElementById("addetto").value;
-      const reparto = document.getElementById("reparto").value;
-      const prodotto = document.getElementById("prodotto").value;
-      const accoglienza = document.getElementById("accoglienza").value;
-      const trattativa = document.getElementById("trattativa").value;
-      const kpi = document.getElementById("kpi").value;
-      const commerciale = document.getElementById("commerciale").value;
-      const conclusiva = document.getElementById("conclusiva").value;
-      const considerazioni = document.getElementById("considerazioni").value;
-      const conclusione = document.getElementById("conclusione").value;
-      const valutazione = document.getElementById("valutazione").value;
+            <div class="form-group">
+                <label for="addetto">ADDETTO:</label>
+                <input type="text" id="addetto" name="addetto" required>
+            </div>
 
-      const contenuto = `
-        <h2>TEST DI VENDITA</h2>
-        <p><strong>DATA:</strong> ${data}</p>
-        <p><strong>PUNTO VENDITA:</strong> ${pdv}</p>
-        <p><strong>ADDETTO:</strong> ${addetto}</p>
-        <p><strong>REPARTO:</strong> ${reparto}</p>
-        <p><strong>PRODOTTO:</strong> ${prodotto}</p>
-        <h3>AREA ACCOGLIENZA</h3><p>${accoglienza}</p>
-        <h3>AREA TRATTATIVA</h3><p>${trattativa}</p>
-        <h3>AREA KPI</h3><p>${kpi}</p>
-        <h3>AREA COMMERCIALE</h3><p>${commerciale}</p>
-        <h3>AREA CONCLUSIVA</h3><p>${conclusiva}</p>
-        <h3>CONSIDERAZIONI FINALI</h3><p>${considerazioni}</p>
-        <h3>CONCLUSIONE COMPLESSIVA</h3><p>${conclusione}</p>
-        <h3>VALUTAZIONE COMPLESSIVA:</h3><p>${valutazione} / 10</p>
-        <p><em>Testo redatto da Diego Pavoni</em></p>
-      `;
+            <div class="form-group">
+                <label for="reparto">REPARTO:</label>
+                <select id="reparto" name="reparto" required>
+                    <option value="">Seleziona reparto...</option>
+                    <option value="GED">GED</option>
+                    <option value="PED">PED</option>
+                    <option value="ISOLA">ISOLA</option>
+                    <option value="INFO">INFO</option>
+                    <option value="TV">TV</option>
+                </select>
+            </div>
 
-      const output = document.createElement("div");
-      output.innerHTML = contenuto;
-      output.style.padding = "20px";
-      output.style.fontFamily = "Arial, sans-serif";
+            <div class="evaluation-section">
+                <div class="evaluation-title">🤝 ACCOGLIENZA</div>
+                <div class="three-columns">
+                    <div class="form-group">
+                        <label for="saluto">SALUTO:</label>
+                        <select id="saluto" name="saluto" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="approccio">APPROCCIO:</label>
+                        <select id="approccio" name="approccio" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="empatia">EMPATIA:</label>
+                        <select id="empatia" name="empatia" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <label for="val_saluto">Valutazione:</label>
+                    <input type="number" id="val_saluto" name="val_saluto" min="1" max="10" step="0.5" required>
+                </div>
+            </div>
 
-      document.body.appendChild(output);
+            <div class="evaluation-section">
+                <div class="evaluation-title">💼 TRATTATIVA / UP SELLING / CONOSCENZE TECNICHE</div>
+                <div class="three-columns">
+                    <div class="form-group">
+                        <label for="trattativa">TRATTATIVA:</label>
+                        <select id="trattativa" name="trattativa" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="upselling">UP SELLING:</label>
+                        <select id="upselling" name="upselling" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="conoscenze">CONOSCENZE:</label>
+                        <select id="conoscenze" name="conoscenze" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <label for="val_trattativa">Valutazione:</label>
+                    <input type="number" id="val_trattativa" name="val_trattativa" min="1" max="10" step="0.5" required>
+                </div>
+            </div>
 
-      const opt = {
-        margin: 5,
-        filename: `TEST DI VENDITA - ${pdv} - ${addetto} - ${valutazione}.pdf`,
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+            <div class="evaluation-section">
+                <div class="evaluation-title">🔄 CROSS SELLING / GESTORE / ESTENSIONI</div>
+                <div class="three-columns">
+                    <div class="form-group">
+                        <label for="crossselling">CROSS SELLING:</label>
+                        <select id="crossselling" name="crossselling" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gestore">GESTORE:</label>
+                        <select id="gestore" name="gestore" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estensioni">ESTENSIONI:</label>
+                        <select id="estensioni" name="estensioni" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <label for="val_cross">Valutazione:</label>
+                    <input type="number" id="val_cross" name="val_cross" min="1" max="10" step="0.5" required>
+                </div>
+            </div>
 
-      html2pdf().set(opt).from(output).save().then(() => {
-        output.remove();
-      });
-    }
-  </script>
+            <div class="evaluation-section">
+                <div class="evaluation-title">🎯 PROMO IN CORSO / INDICAZIONI VENDITA / DILAZIONI PAGAMENTO</div>
+                <div class="three-columns">
+                    <div class="form-group">
+                        <label for="promo">PROMO IN CORSO:</label>
+                        <select id="promo" name="promo" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="indicazioni">INDICAZIONI:</label>
+                        <select id="indicazioni" name="indicazioni" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dilazioni">DILAZIONI:</label>
+                        <select id="dilazioni" name="dilazioni" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <label for="val_promo">Valutazione:</label>
+                    <input type="number" id="val_promo" name="val_promo" min="1" max="10" step="0.5" required>
+                </div>
+            </div>
+
+            <div class="evaluation-section">
+                <div class="evaluation-title">💳 PROPOSTA CARTA FAN - MYFANSAFE - PROTOCOLLO</div>
+                <div class="three-columns">
+                    <div class="form-group">
+                        <label for="cartafan">CARTA FAN:</label>
+                        <select id="cartafan" name="cartafan" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="myfansafe">MYFANSAFE:</label>
+                        <select id="myfansafe" name="myfansafe" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="protocollo">PROTOCOLLO:</label>
+                        <select id="protocollo" name="protocollo" required>
+                            <option value="">Seleziona...</option>
+                            <option value="OK">OK</option>
+                            <option value="MIGLIORABILE">MIGLIORABILE</option>
+                            <option value="MALE">MALE</option>
+                            <option value="NULLA">NULLA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <label for="val_carta">Valutazione:</label>
+                    <input type="number" id="val_carta" name="val_carta" min="1" max="10" step="0.5" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="considerazioni">CONSIDERAZIONI:</label>
+                <textarea id="considerazioni" name="considerazioni" placeholder="Es: LA RAGAZZA DEVE ESSERE PRIMA..NE HA LA POSSIBILITA'"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="conclusione">CONCLUSIONE COMPLESSIVA:</label>
+                <textarea id="conclusione" name="conclusione" placeholder="Es: ANALISI COSTANTE TENERE SEMPRE IN TIRO"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="valutazione_complessiva">Valutazione Complessiva (da 1 a 10):</label>
+                <input type="number" id="valutazione_complessiva" name="valutazione_complessiva" min="1" max="10" step="0.5" required>
+            </div>
+
+            <div class="form-group">
+                <label for="redattore">TEST DI VENDITA REDATTO DA:</label>
+                <input type="text" id="redattore" name="redattore" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ruolo">RUOLO:</label>
+                <select id="ruolo" name="ruolo" required>
+                    <option value="">Seleziona ruolo...</option>
+                    <option value="SUPERVISORE">SUPERVISORE</option>
+                    <option value="DIRETTORE">DIRETTORE</option>
+                    <option value="VICE">VICE</option>
+                    <option value="GRATICOLA">GRATICOLA</option>
+                </select>
+            </div>
+
+            <div class="buttons-container">
+                <button type="button" class="btn btn-telegram" onclick="sendToTelegram()">
+                    📱 Invia su Telegram
+                </button>
+                <button type="button" class="btn btn-word" onclick="exportToWord()">
+                    📄 Esporta in Word
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('it-IT', options);
+        }
+
+        function generateReport() {
+            const form = document.getElementById('testVenditaForm');
+            const formData = new FormData(form);
+            
+            const pdv = formData.get('pdv');
+            const data = document.getElementById('data').value; // Usa direttamente il valore già formattato
+            const addetto = formData.get('addetto');
+            const reparto = formData.get('reparto');
+            const redattore = formData.get('redattore');
+            const ruolo = formData.get('ruolo');
+
+            const report = `**PDV TRONY : ${pdv.toUpperCase()}        DATA. ${data}**
+
+ADDETTO : ${addetto}
+
+REPARTO / ARGOMENTO : ${reparto.toUpperCase()}
+
+* **ACCOGLIENZA**
+    * SALUTO: ${formData.get('saluto')}
+    * APPROCCIO: ${formData.get('approccio')}
+    * EMPATIA: ${formData.get('empatia')}
+    Valutazione: ${formData.get('val_saluto')}
+
+* **TRATTATIVA / UP SELLING / CONOSCENZE TECNICHE**
+    * TRATTATIVA: ${formData.get('trattativa')}
+    * UP SELLING: ${formData.get('upselling')}
+    * CONOSCENZE: ${formData.get('conoscenze')}
+    Valutazione : ${formData.get('val_trattativa')}
+
+* **CROSS SELLING / GESTORE / ESTENSIONI**
+    * CROSS SELLING: ${formData.get('crossselling')}
+    * GESTORE: ${formData.get('gestore')}
+    * ESTENSIONI: ${formData.get('estensioni')}
+    Valutazione : ${formData.get('val_cross')}
+
+* **PROMO IN CORSO / INDICAZIONI VENDITA / DILAZIONI PAGAMENTO**
+    * PROMO IN CORSO: ${formData.get('promo')}
+    * INDICAZIONI: ${formData.get('indicazioni')}
+    * DILAZIONI: ${formData.get('dilazioni')}
+    Valutazione : ${formData.get('val_promo')}
+
+* **PROPOSTA CARTA FAN - MYFANSAFE - PROTOCOLLO**
+    * CARTA FAN: ${formData.get('cartafan')}
+    * MYFANSAFE: ${formData.get('myfansafe')}
+    * PROTOCOLLO: ${formData.get('protocollo')}
+    Valutazione: ${formData.get('val_carta')}
+
+* **CONSIDERAZIONI : ${formData.get('considerazioni')}**
+
+* **CONCLUSIONE COMPLESSIVA : ${formData.get('conclusione')}**
+
+* **Valutazione Complessiva (da 1 a 10): ${formData.get('valutazione_complessiva')}**
+
+TEST DI VENDITA REDATTO DA: ${redattore.toUpperCase()}
+RUOLO: ${ruolo.toUpperCase()}`;
+
+            return report;
+        }
+
+        function sendToTelegram() {
+            const report = generateReport();
+            const encodedReport = encodeURIComponent(report);
+            const telegramUrl = `https://t.me/share/url?text=${encodedReport}`;
+            window.open(telegramUrl, '_blank');
+        }
+
+        function exportToWord() {
+            const report = generateReport();
+            
+            // Creazione del documento Word
+            const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Test di Vendita TRONY</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.5; }
+                        .header { font-weight: bold; text-align: center; margin-bottom: 20px; }
+                        .section { margin-bottom: 15px; }
+                        .bold { font-weight: bold; }
+                    </style>
+                </head>
+                <body>`;
+            
+            const body = report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                     .replace(/\n/g, '<br>');
+            
+            const footer = '</body></html>';
+            
+            const htmlContent = header + '<div>' + body + '</div>' + footer;
+            
+            const blob = new Blob([htmlContent], {
+                type: 'application/msword'
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Test_Vendita_TRONY_${new Date().toISOString().split('T')[0]}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Imposta la data di oggi come default e la rende non modificabile
+        function setCurrentDate() {
+            const today = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = today.toLocaleDateString('it-IT', options);
+            document.getElementById('data').value = formattedDate;
+        }
+        
+        // Imposta la data quando la pagina si carica
+        document.addEventListener('DOMContentLoaded', setCurrentDate);
+    </script>
 </body>
 </html>
