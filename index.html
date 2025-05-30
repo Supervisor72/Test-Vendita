@@ -165,6 +165,15 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(220,53,69,0.3);
         }
+        /* Stili per il nuovo pulsante Reset */
+        .btn-reset {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); /* Grigio scuro per reset */
+            color: white;
+        }
+        .btn-reset:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(108,117,125,0.3);
+        }
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -176,6 +185,33 @@
             gap: 1rem;
             margin-bottom: 1rem;
         }
+        /* Stili per il messaggio di stato */
+        .status-message {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            display: none; /* Inizialmente nascosto */
+            animation: fadeInOut 4s forwards; /* Animazione di comparsa/scomparsa */
+        }
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -520,6 +556,8 @@
                 </select>
             </div>
 
+            <div id="statusMessage" class="status-message"></div>
+
             <div class="buttons-container">
                 <button type="button" class="btn btn-telegram" onclick="sendToTelegram()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -533,20 +571,85 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                     Invia Email
                 </button>
+                <button type="button" class="btn btn-reset" id="resetModulo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    Reset Modulo
+                </button>
             </div>
         </form>
     </div>
 
     <script>
+        const form = document.getElementById('testVenditaForm');
+        const dataInput = document.getElementById('data');
+        const statusMessage = document.getElementById('statusMessage');
+        const resetButton = document.getElementById('resetModulo');
+
+        // Imposta la data attuale all'apertura
+        function setCurrentDate() {
+            const today = new Date();
+            dataInput.value = formatDate(today);
+        }
+
         function formatDate(date) {
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('it-IT', options);
         }
+
+        // --- Funzioni per il Salvataggio e Caricamento Dati ---
+        function salvaDati() {
+            const dati = {};
+            form.querySelectorAll('input, select, textarea').forEach(element => {
+                // Non salvare la data automatica, che viene generata all'apertura
+                if (element.id !== 'data') {
+                    dati[element.id] = element.value;
+                }
+            });
+            localStorage.setItem('datiModuloTrony', JSON.stringify(dati));
+            mostraMessaggio('Dati salvati automaticamente!', 'success');
+        }
+
+        function caricaDati() {
+            const datiSalvati = localStorage.getItem('datiModuloTrony');
+            if (datiSalvati) {
+                const dati = JSON.parse(datiSalvati);
+                for (const id in dati) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.value = dati[id];
+                    }
+                }
+                mostraMessaggio('Dati caricati dai salvataggi precedenti.', 'success');
+            }
+            // Assicurati che la data sia sempre attuale all'apertura
+            setCurrentDate();
+        }
+
+        function resetDati() {
+            form.reset(); // Resetta tutti i campi del form
+            localStorage.removeItem('datiModuloTrony'); // Rimuovi i dati dal localStorage
+            setCurrentDate(); // Re-imposta la data attuale
+            calculateOverallRating(); // Aggiorna la valutazione complessiva
+            generateSummaryJudgment(); // Aggiorna il giudizio riepilogativo
+            mostraMessaggio('Modulo resettato e dati cancellati.', 'success');
+        }
+
+        function mostraMessaggio(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+
+            // Resetta l'animazione per farla ripartire ogni volta
+            statusMessage.style.animation = 'none';
+            void statusMessage.offsetWidth; // Trigger reflow
+            statusMessage.style.animation = null;
+
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 4000); // Messaggio visibile per 4 secondi
+        }
+        // --- Fine Funzioni per il Salvataggio e Caricamento Dati ---
+
 
         function calculateOverallRating() {
             const valSaluto = parseFloat(document.getElementById('val_saluto').value);
@@ -636,7 +739,7 @@
 
             if (areasToImprove.length > 0) {
                 judgment += 'Si raccomanda di focalizzare l\'attenzione sulle seguenti aree: ' + areasToImprove.join('; ') + '. ';
-            } 
+            }
             
             if (areasWithOk.length > 0) {
                 judgment += `In particolare, le aree di ${areasWithOk.join(', ')} sono state gestite in modo ottimo. `;
@@ -646,164 +749,129 @@
         }
 
         function generateReport() {
-            const form = document.getElementById('testVenditaForm');
             const formData = new FormData(form);
-            
-            const pdv = formData.get('pdv');
-            const data = document.getElementById('data').value;
-            const addetto = formData.get('addetto');
-            const reparto = formData.get('reparto');
-            const redattore = formData.get('redattore');
-            const ruolo = formData.get('ruolo');
-            
-            // Per includere i valori testuali delle valutazioni (es. "4 - GRAVEMENTE INSUFFICIENTE")
-            // Aggiungo il controllo `?.text || ''` per gestire i casi in cui non è selezionata un'opzione
-            const valSalutoText = document.getElementById('val_saluto').options[document.getElementById('val_saluto').selectedIndex]?.text || '';
-            const valTrattativaText = document.getElementById('val_trattativa').options[document.getElementById('val_trattativa').selectedIndex]?.text || '';
-            const valCrossText = document.getElementById('val_cross').options[document.getElementById('val_cross').selectedIndex]?.text || '';
-            const valPromoText = document.getElementById('val_promo').options[document.getElementById('val_promo').selectedIndex]?.text || '';
-            const valCartaText = document.getElementById('val_carta').options[document.getElementById('val_carta').selectedIndex]?.text || '';
+            let reportText = `TEST DI VENDITA TRONY\n\n`;
+            reportText += `PUNTO VENDITA: ${formData.get('pdv') || 'N/D'}\n`;
+            reportText += `DATA: ${formData.get('data') || 'N/D'}\n`;
+            reportText += `ADDETTO: ${formData.get('addetto') || 'N/D'}\n`;
+            reportText += `REPARTO: ${formData.get('reparto') || 'N/D'}\n\n`;
 
+            reportText += `🤝 ACCOGLIENZA\n`;
+            reportText += `  SALUTO: ${formData.get('saluto') || 'N/D'}\n`;
+            reportText += `  APPROCCIO: ${formData.get('approccio') || 'N/D'}\n`;
+            reportText += `  EMPATIA: ${formData.get('empatia') || 'N/D'}\n`;
+            reportText += `  VALUTAZIONE: ${formData.get('val_saluto') || 'N/D'}\n\n`;
 
-            const report = `**PDV TRONY : ${pdv.toUpperCase()}        DATA. ${data}**
+            reportText += `💼 GESTIONE VENDITA\n`;
+            reportText += `  TRATTATIVA: ${formData.get('trattativa') || 'N/D'}\n`;
+            reportText += `  UP SELLING: ${formData.get('upselling') || 'N/D'}\n`;
+            reportText += `  CONOSCENZE: ${formData.get('conoscenze') || 'N/D'}\n`;
+            reportText += `  VALUTAZIONE: ${formData.get('val_trattativa') || 'N/D'}\n\n`;
 
-ADDETTO : ${addetto}
+            reportText += `🔄 GESTIONE KPI\n`;
+            reportText += `  CROSS SELLING: ${formData.get('crossselling') || 'N/D'}\n`;
+            reportText += `  GESTORE: ${formData.get('gestore') || 'N/D'}\n`;
+            reportText += `  ESTENSIONI: ${formData.get('estensioni') || 'N/D'}\n`;
+            reportText += `  VALUTAZIONE: ${formData.get('val_cross') || 'N/D'}\n\n`;
 
-REPARTO / ARGOMENTO : ${reparto.toUpperCase()}
+            reportText += `🎯 USO ARMI\n`;
+            reportText += `  PROMO IN CORSO: ${formData.get('promo') || 'N/D'}\n`;
+            reportText += `  INDICAZIONI: ${formData.get('indicazioni') || 'N/D'}\n`;
+            reportText += `  DILAZIONI: ${formData.get('dilazioni') || 'N/D'}\n`;
+            reportText += `  VALUTAZIONE: ${formData.get('val_promo') || 'N/D'}\n\n`;
 
-* **ACCOGLIENZA**
-    * SALUTO: ${formData.get('saluto') || 'N/D'}
-    * APPROCCIO: ${formData.get('approccio') || 'N/D'}
-    * EMPATIA: ${formData.get('empatia') || 'N/D'}
-    Valutazione: ${valSalutoText}
+            reportText += `💳 CONCLUSIONE VENDITA\n`;
+            reportText += `  CARTA FAN: ${formData.get('cartafan') || 'N/D'}\n`;
+            reportText += `  MYFANSAFE: ${formData.get('myfansafe') || 'N/D'}\n`;
+            reportText += `  PROTOCOLLO: ${formData.get('protocollo') || 'N/D'}\n`;
+            reportText += `  VALUTAZIONE: ${formData.get('val_carta') || 'N/D'}\n\n`;
 
-* **GESTIONE VENDITA**
-    * TRATTATIVA: ${formData.get('trattativa') || 'N/D'}
-    * UP SELLING: ${formData.get('upselling') || 'N/D'}
-    * CONOSCENZE: ${formData.get('conoscenze') || 'N/D'}
-    Valutazione : ${valTrattativaText}
+            reportText += `CONSIDERAZIONI: ${formData.get('considerazioni') || 'N/D'}\n`;
+            reportText += `CONCLUSIONE COMPLESSIVA: ${formData.get('conclusione') || 'N/D'}\n`;
+            reportText += `VALUTAZIONE COMPLESSIVA (media delle aree): ${formData.get('valutazione_complessiva') || 'N/D'}\n`;
+            reportText += `GIUDIZIO RIEPILOGATIVO: ${formData.get('giudizio_riepilogativo') || 'N/D'}\n\n`;
 
-* **GESTIONE KPI**
-    * CROSS SELLING: ${formData.get('crossselling') || 'N/D'}
-    * GESTORE: ${formData.get('gestore') || 'N/D'}
-    * ESTENSIONI: ${formData.get('estensioni') || 'N/D'}
-    Valutazione : ${valCrossText}
-
-* **USO ARMI**
-    * PROMO IN CORSO: ${formData.get('promo') || 'N/D'}
-    * INDICAZIONI: ${formData.get('indicazioni') || 'N/D'}
-    * DILAZIONI: ${formData.get('dilazioni') || 'N/D'}
-    Valutazione : ${valPromoText}
-
-* **CONCLUSIONE VENDITA**
-    * CARTA FAN: ${formData.get('cartafan') || 'N/D'}
-    * MYFANSAFE: ${formData.get('myfansafe') || 'N/D'}
-    * PROTOCOLLO: ${formData.get('protocollo') || 'N/D'}
-    Valutazione: ${valCartaText}
-
-* **CONSIDERAZIONI : ${formData.get('considerazioni') || 'N/D'}**
-
-* **CONCLUSIONE COMPLESSIVA : ${formData.get('conclusione') || 'N/D'}**
-
-* **Valutazione Complessiva (media): ${formData.get('valutazione_complessiva') || 'N/D'}**
-
-* **Giudizio Riepilogativo: ${formData.get('giudizio_riepilogativo') || 'N/D'}**
-
-TEST DI VENDITA REDATTO DA: ${redattore.toUpperCase() || 'N/D'}
-RUOLO: ${ruolo.toUpperCase() || 'N/D'}`;
-
-            return report;
+            reportText += `TEST DI VENDITA REDATTO DA: ${formData.get('redattore') || 'N/D'}\n`;
+            reportText += `RUOLO: ${formData.get('ruolo') || 'N/D'}\n`;
+            return reportText;
         }
 
         function sendToTelegram() {
-            const report = generateReport();
-            const encodedReport = encodeURIComponent(report);
-            const telegramUrl = `https://t.me/share/url?url=&text=${encodedReport}`;
+            if (!form.checkValidity()) {
+                form.reportValidity(); // Mostra i messaggi di errore di validazione HTML5
+                mostraMessaggio('Compila tutti i campi obbligatori prima di inviare!', 'error');
+                return;
+            }
+            const report = encodeURIComponent(generateReport());
+            const telegramBotToken = 'YOUR_BOT_TOKEN'; // Sostituisci con il tuo token
+            const chatId = 'YOUR_CHAT_ID'; // Sostituisci con l'ID della chat o dell'utente
+
+            // Invia il report tramite API di Telegram (richiede un backend o un'integrazione complessa)
+            // Per un semplice link su Telegram, useremo un `tg://msg` che è più diretto ma limitato.
+            // La trasmissione diretta tramite API Telegram da HTML client-side è bloccata per sicurezza.
+            // Qui simulerò un link Telegram. Per l'invio effettivo, ti servirà un server.
+
+            const telegramUrl = `https://t.me/share/url?url=${report}`;
+            // Oppure per messaggi diretti con bot (richiede configurazione lato server per gestire l'API)
+            // const telegramApiUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${report}`;
+            // fetch(telegramApiUrl) ...
+
+            // Apre un nuovo tab per Telegram, l'utente dovrà incollare il messaggio.
+            // Questo è un workaround dato che l'invio diretto API da client-side non è pratico/sicuro.
             window.open(telegramUrl, '_blank');
-        }
-
-        function sendEmail() {
-            const report = generateReport();
-            const pdv = document.getElementById('pdv').value;
-            const addetto = document.getElementById('addetto').value;
-            const data = document.getElementById('data').value;
-
-            const subject = encodeURIComponent(`Test di Vendita TRONY - ${pdv || 'N/D'} - ${addetto || 'N/D'} - ${data || 'N/D'}`);
-            const body = encodeURIComponent(report);
-
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            mostraMessaggio('Report generato. Incollalo su Telegram!', 'success');
         }
 
         function exportToWord() {
-            const pdv = document.getElementById('pdv').value;
-            const addetto = document.getElementById('addetto').value;
-            const overallRating = document.getElementById('valutazione_complessiva').value;
-
-            if (!pdv || !addetto || !overallRating) {
-                alert('Assicurati di aver compilato il Punto Vendita, l\'Addetto e le Valutazioni per generare il nome del file.');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                mostraMessaggio('Compila tutti i campi obbligatori prima di esportare!', 'error');
                 return;
             }
-
-            const report = generateReport();
-            
-            // Creazione del documento Word
-            const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <meta charset='utf-8'>
-                    <title>Test di Vendita TRONY</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.5; }
-                        .header { font-weight: bold; text-align: center; margin-bottom: 20px; }
-                        .section { margin-bottom: 15px; }
-                        .bold { font-weight: bold; }
-                    </style>
-                </head>
-                <body>`;
-            
-            // Sostituisci i tag Markdown con tag HTML per il grassetto e le interruzioni di riga
-            const bodyContent = report.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                                     .replace(/\n/g, '<br>');
-            
-            const footer = '</body></html>';
-            
-            const htmlContent = header + '<div>' + bodyContent + '</div>' + footer;
-            
-            const blob = new Blob([htmlContent], {
-                type: 'application/msword'
-            });
-            
+            const reportContent = generateReport();
+            const blob = new Blob([reportContent], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-
-            // Nome del file dinamico
-            // Sostituisci spazi con underscore e punti con virgole per il nome del file
-            const fileNamePdv = pdv.replace(/\s/g, '_');
-            const fileNameAddetto = addetto.replace(/\s/g, '_');
-            const fileNameOverallRating = overallRating.replace('.', ','); // Sostituisce il punto con la virgola
-
-            link.download = `Test_Vendita_${fileNamePdv}_${fileNameAddetto}_${fileNameOverallRating}.doc`;
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Test_Vendita_TRONY.doc';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            mostraMessaggio('Report esportato in Word!', 'success');
         }
 
-        // Imposta la data di oggi come default e la rende non modificabile
-        function setCurrentDate() {
-            const today = new Date();
-            const formattedDate = formatDate(today); // Usa la funzione formatDate
-            document.getElementById('data').value = formattedDate;
+        function sendEmail() {
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                mostraMessaggio('Compila tutti i campi obbligatori prima di inviare l\'email!', 'error');
+                return;
+            }
+            const subject = encodeURIComponent("Report Test di Vendita TRONY");
+            const body = encodeURIComponent(generateReport());
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            mostraMessaggio('Email generata!', 'success');
         }
-        
-        // Imposta la data quando la pagina si carica
+
+        // --- Event Listeners ---
+        // Salvataggio automatico ogni volta che un input cambia
+        form.addEventListener('input', salvaDati);
+
+        // Carica i dati e imposta la data quando la pagina è completamente caricata
         document.addEventListener('DOMContentLoaded', () => {
-            setCurrentDate();
-            // Aggiungi un listener anche per assicurarti che la media e il giudizio vengano calcolati all'inizio se ci sono valori predefiniti
-            calculateOverallRating();
-            generateSummaryJudgment();
+            caricaDati();
+            setCurrentDate(); // Assicura che la data sia impostata anche se non ci sono dati salvati
+            calculateOverallRating(); // Ricalcola all'avvio per mostrare il valore corretto
+            generateSummaryJudgment(); // Genera il giudizio riepilogativo all'avvio
         });
+
+        // Event listener per il pulsante Reset
+        resetButton.addEventListener('click', () => {
+            if (confirm('Sei sicuro di voler resettare il modulo e cancellare tutti i dati salvati? Questa azione è irreversibile.')) {
+                resetDati();
+            }
+        });
+
     </script>
 </body>
 </html>
