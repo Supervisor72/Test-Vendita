@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test di Vendita TRONY</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary-color: #4A90E2; /* Blu più professionale */
@@ -149,13 +151,13 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0,136,204,0.3);
         }
-        .btn-word {
-            background: linear-gradient(135deg, #2B579A 0%, #1F457A 100%); /* Blu scuro Word */
+        .btn-pdf {
+            background: linear-gradient(135deg, #E03A3A 0%, #B71C1C 100%); /* Rosso PDF */
             color: white;
         }
-        .btn-word:hover {
+        .btn-pdf:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(43,87,154,0.3);
+            box-shadow: 0 6px 15px rgba(224,58,58,0.3);
         }
         .btn-email {
             background: linear-gradient(135deg, #DC3545 0%, #C42D3C 100%); /* Rosso Email */
@@ -564,9 +566,9 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                     Invia su Telegram
                 </button>
-                <button type="button" class="btn btn-word" onclick="exportToWord()">
+                <button type="button" class="btn btn-pdf" onclick="exportToPDF()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    Esporta in Word
+                    Esporta in PDF
                 </button>
                 <button type="button" class="btn btn-email" onclick="sendEmail()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -823,23 +825,65 @@
             mostraMessaggio('Report generato. Incollalo su Telegram!', 'success');
         }
 
-        function exportToWord() {
+        function exportToPDF() {
             if (!form.checkValidity()) {
                 form.reportValidity();
                 mostraMessaggio('Compila tutti i campi obbligatori prima di esportare!', 'error');
                 return;
             }
             const reportContent = generateReport();
-            const blob = new Blob([reportContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Test_Vendita_TRONY.doc';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            mostraMessaggio('Report esportato in Word!', 'success');
+
+            // Elemento temporaneo che riproduce esattamente il testo del report (emoji incluse)
+            const temp = document.createElement('div');
+            temp.style.position = 'fixed';
+            temp.style.left = '-9999px';
+            temp.style.top = '0';
+            temp.style.width = '750px';
+            temp.style.padding = '30px';
+            temp.style.background = '#ffffff';
+            temp.style.color = '#000000';
+            temp.style.fontFamily = "'Courier New', monospace";
+            temp.style.fontSize = '13px';
+            temp.style.lineHeight = '1.5';
+            temp.style.whiteSpace = 'pre-wrap';
+            temp.style.wordbreak = 'break-word';
+            temp.textContent = reportContent;
+            document.body.appendChild(temp);
+
+            html2canvas(temp, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 30;
+                const imgWidth = pageWidth - margin * 2;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+
+                let heightLeft = imgHeight;
+                let position = margin;
+
+                doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - margin * 2);
+
+                while (heightLeft > 0) {
+                    position = margin - (imgHeight - heightLeft);
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= (pageHeight - margin * 2);
+                }
+
+                const fd = new FormData(form);
+                const pdv = (fd.get('pdv') || 'N/D').toString().trim();
+                const addetto = (fd.get('addetto') || 'N/D').toString().trim();
+                const voto = (fd.get('valutazione_complessiva') || 'N/D').toString().trim();
+                doc.save(`Test Vendita ${pdv} ${addetto} e voto ${voto}.pdf`);
+                document.body.removeChild(temp);
+                mostraMessaggio('Report esportato in PDF!', 'success');
+            }).catch(err => {
+                document.body.removeChild(temp);
+                mostraMessaggio('Errore durante la generazione del PDF.', 'error');
+            });
         }
 
         function sendEmail() {
